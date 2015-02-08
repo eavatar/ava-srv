@@ -88,7 +88,7 @@ class ShellBase(object):
     __metaclass__ = ABCMeta
 
     def __init__(self):
-        port = config.agent().getint("web", "listen_port")
+        port = config.agent().getint("webfront", "listen_port")
         self.base_url = "http://127.0.0.1:%d/" % (port,)
         self.supervisor = Supervisor()
         self.shell_stopped = False

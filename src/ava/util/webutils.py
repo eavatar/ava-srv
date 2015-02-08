@@ -36,7 +36,6 @@ def calc_etag(content):
     return md5.hexdigest()
 
 
-
 def guess_media_type(ext):
     t = _ext_to_media_type.get(ext)
     if t is None:

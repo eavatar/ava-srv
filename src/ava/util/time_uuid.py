@@ -6,7 +6,8 @@ from __future__ import print_function, division, absolute_import
 
 import uuid
 import datetime
-import time, calendar
+import time
+import calendar
 import threading
 import random
 

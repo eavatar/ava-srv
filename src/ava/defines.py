@@ -4,36 +4,42 @@ Various definitions used across different packages.
 """
 from __future__ import absolute_import, division, print_function, unicode_literals
 
-#### Authentication ####
-
-# the scheme for authenticating clients.
-AUTHENTICATION_SCHEME = 'eavatar'
-
-# return to client to
-AUTHENTICATION_HEADER = 'EAvatar realm="eavatar.com",key="abcd"'
-
 
 VERSION_STRING = "0.1.0"
+VERSION_MAJOR = 0
+VERSION_MINOR = 1
+VERSION_MICRO = 0
 
 # return as the root resource.
 AGENT_INFO = {
-            "EAvatar": "A versatile agent.",
-            "version": VERSION_STRING,
-            "vendor": {
-                "name": "EAvatar Technology Ltd.",
-                "version": "0.1.0"
-            },
+    "EAvatar": "A versatile agent.",
+    "version": VERSION_STRING,
+    "vendor": {
+        "name": "EAvatar Technology Ltd.",
+        "version": "0.1.0"
+    },
 }
 
 
-# The ID for built-in message listener.
-MESSAGE_LISTENER_ID = 'message'
+# activated engines
 
-MAX_MESSAGE_SIZE = 1024
-MAX_REQUEST_SIZE = 4096
+INSTALLED_ENGINES = [
+    "ava.engine.data:DataEngine",
+    "ava.engine.webfront:WebfrontEngine",
+    "ava.engine.extension:ExtensionEngine",
+    "ava.engine.module:ModuleEngine",
+]
 
 
 ##### Environment variable ####
 AVA_HOME = 'AVA_HOME'  # where the working directory.
 AVA_SECRET_KEY = 'AVA_SECRET_KEY'  # secret key for this agent.
 AVA_OWNER_KEY = 'AVA_OWNER_KEY'  # the owner's public key.
+
+
+# tries to import definitions from the global settings.
+
+try:
+    from settings import *
+except ImportError:
+    pass

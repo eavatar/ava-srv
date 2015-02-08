@@ -8,9 +8,12 @@ monkey.patch_all()
 import sys
 import logging
 
+import importlib
+
 import pkg_resources
 
 from ava import context
+from ava.defines import INSTALLED_ENGINES
 
 logger = logging.getLogger(__name__)
 
@@ -33,6 +36,20 @@ def patch_sys_getfilesystemencoding():
     sys.getfilesystemencoding = patched_func
 
 
+def load_class(full_class_string):
+    """
+    dynamically load a class from a string. e.g. 'a.b.package:classname'
+    """
+
+    class_data = full_class_string.split(":")
+    module_path = class_data[0]
+    class_name = class_data[1]
+
+    module = importlib.import_module(module_path)
+    # Finally, we retrieve the Class
+    return class_name, getattr(module, class_name)
+
+
 class Agent(object):
     def __init__(self):
         logger.debug("Initializing agent...")
@@ -48,26 +65,15 @@ class Agent(object):
         self._greenlets.append(child)
 
     def _start_engines(self):
-        engine_tags = []
-        for it in pkg_resources.iter_entry_points('eavatar.engines'):
-            logger.debug("Found engine: %s", it.name)
-            names = it.name.split(':')
-            if len(names) < 2:
-                logging.debug("Engine tag malformed. Skipped.")
-                continue
-            name = names[1]
-            engine_cls = it.load()
+        for it in INSTALLED_ENGINES:
+            logger.debug("Loading engine: %s", it)
+            name, engine_cls = load_class(it)
             engine = engine_cls()
 
-            engine_tags.append(it.name)
             self._context.bind(name, engine)
-
-        for tag in sorted(engine_tags):
-            logger.debug("Loading engine: %s", tag)
-            names = tag.split(':')
-            name = names[1]
             self._engines.append(self._context[name])
 
+        logger.debug("Starting engines...")
         for it in self._engines:
             it.start(self._context)
 

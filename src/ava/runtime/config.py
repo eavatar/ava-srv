@@ -47,13 +47,13 @@ def agent(file=AGENT_CONF):
     if not _agent:
         _agent = ConfigFile(file)
         _agent.add_section('agent')
-        _agent.add_section('web')
+        _agent.add_section('webfront')
         _agent.add_section('data')
         _agent.add_section('extension')
         # set defaults for various sections.
 
-        _agent.set('web', 'listen_port', '5000')
-        _agent.set('web', 'listen_addr', '127.0.0.1')
+        _agent.set('webfront', 'listen_port', '5000')
+        _agent.set('webfront', 'listen_addr', '127.0.0.1')
 
         # loads more options from file.
         _agent.load()

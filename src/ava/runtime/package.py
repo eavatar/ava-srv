@@ -12,6 +12,9 @@ logger = logging.getLogger(__name__)
 
 
 class PackageManager(object):
+    """
+    Add packages in egg format at runtime.
+    """
     def __init__(self, pkgs_dir=environ.pkgs_dir()):
         self.pkgs_dir = pkgs_dir
 
@@ -21,7 +24,6 @@ class PackageManager(object):
         """
 
         #logger.debug("sys.path(before): ", sys.path)
-
 
         logger.debug("Packages Directory: %s", self.pkgs_dir)
         distributions, errors = pkg_resources.working_set.find_plugins(

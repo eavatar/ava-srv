@@ -17,7 +17,7 @@ class Extension(object):
 
 
 class ExtensionManager(object):
-    def __init__(self, namespace="eavatar.extension"):
+    def __init__(self, namespace="ava.extension"):
         self.namespace = namespace
         self.extensions = []
 

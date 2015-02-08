@@ -8,9 +8,7 @@ monkey.patch_all()
 import sys
 import logging
 
-from ava.engine.extension import ExtensionEngine
-from ava.engine.data import DataEngine
-from ava.engine.web import WebEngine
+import pkg_resources
 
 from ava import context
 
@@ -50,17 +48,25 @@ class Agent(object):
         self._greenlets.append(child)
 
     def _start_engines(self):
-        ext_engine = ExtensionEngine()
-        self._engines.append(ext_engine)
-        self._context.bind("ext_engine", ext_engine)
+        engine_tags = []
+        for it in pkg_resources.iter_entry_points('eavatar.engines'):
+            logger.debug("Found engine: %s", it.name)
+            names = it.name.split(':')
+            if len(names) < 2:
+                logging.debug("Engine tag malformed. Skipped.")
+                continue
+            name = names[1]
+            engine_cls = it.load()
+            engine = engine_cls()
 
-        data_engine = DataEngine()
-        self._engines.append(data_engine)
-        self._context.bind("data_engine", data_engine)
+            engine_tags.append(it.name)
+            self._context.bind(name, engine)
 
-        web_engine = WebEngine()
-        self._engines.append(web_engine)
-        self._context.bind("web_engine", web_engine)
+        for tag in sorted(engine_tags):
+            logger.debug("Loading engine: %s", tag)
+            names = tag.split(':')
+            name = names[1]
+            self._engines.append(self._context[name])
 
         for it in self._engines:
             it.start(self._context)

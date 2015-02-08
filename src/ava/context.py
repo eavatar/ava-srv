@@ -22,6 +22,9 @@ class AgentContext(object):
     def __delitem__(self, key):
         self.unbind(key)
 
+    def __getattr__(self, item):
+        return self.get(item)
+
     def bind(self, key, provider):
         self._attributes[key] = provider
 
@@ -39,9 +42,6 @@ class AgentContext(object):
 
     def add_child_greenlet(self, child):
         self._agent.add_child_greenlet(child)
-
-    def __getattr__(self, item):
-        return self.get(item)
 
     def send(self, *args, **kwargs):
         """

@@ -41,7 +41,7 @@ def package_in_path(pkg):
 
 def main():
     logging.basicConfig(format='%(asctime)s - %(levelname)s - %(name)s - %(message)s', level=logging.DEBUG, disable_existing_loggers=False)
-    logger = logging.getLogger(__name__)
+    logger = logging.getLogger('avaw')
 
     entry_name = 'factory'
     if os.environ.get('AVA_NOGUI') is not None:

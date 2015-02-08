@@ -19,7 +19,7 @@ import depends
 # prevent IDE regarding depends as not used.
 depends.absolute_import
 
-logger = logging.getLogger(__name__)
+logger = logging.getLogger("avad")
 
 
 def package_in_path(pkg):

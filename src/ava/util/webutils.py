@@ -4,7 +4,6 @@ from __future__ import print_function, division, absolute_import
 import os
 import logging
 import hashlib
-import falcon
 try:
     from urllib2 import parse_http_list as _parse_list_header
 except ImportError: # pragma: no cover
@@ -36,30 +35,6 @@ def calc_etag(content):
     md5.update(content)
     return md5.hexdigest()
 
-
-def send_static_file(req, resp, path, media_type=None):
-    path = os.path.join(static_folder, path)
-    logger.debug("Gets file %s", path)
-    if not os.path.exists(path):
-        resp.status = falcon.HTTP_404
-        resp.body = "<html><body>File Not Found.</body></html>"
-        return
-    filename, ext = os.path.splitext(path)
-    if media_type is None:
-        media_type = guess_media_type(ext)
-    resp.content_type = media_type
-
-    data = open(path, 'rb').read()
-    etag = req.if_none_match
-    expected_etag = calc_etag(data)
-
-    if etag and etag == expected_etag:
-        resp.status = falcon.HTTP_304
-        return
-
-    resp.data = data
-    resp.status = falcon.HTTP_200
-    resp.etag = expected_etag
 
 
 def guess_media_type(ext):

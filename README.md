@@ -1,3 +1,3 @@
 EAvatar Ava
 ==============================
-A simple agent server based on Python runtime.
+A versatile agent for publishing simple web resources. 

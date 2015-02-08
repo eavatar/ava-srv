@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from __future__ import absolute_import, division, print_function, unicode_literals
 
-from bottle import route
+from ava.webfront import route
 
 # sample resource
 

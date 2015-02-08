@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 from __future__ import absolute_import, division, print_function, unicode_literals
 
-from bottle import route, static_file
 from ava.util import resource_path
+from ava.webfront import route, static_file
 
 static_folder = resource_path('home/static')
 

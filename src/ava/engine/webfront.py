@@ -10,14 +10,44 @@ from gevent import pywsgi
 import bottle
 
 from ava.runtime import config
-from ava.runtime import environ
 
 logger = logging.getLogger(__name__)
 
-_RESOURCES_DIR = 'resources'
+
+class ApplicationDispatcher(object):
+    """Allows one to mount middlewares or applications in a WSGI application.
+    """
+
+    def __init__(self, app, mounts=None):
+        self.app = app
+        self.mounts = mounts or {}
+
+    def __call__(self, environ, start_response):
+        script = environ.get('PATH_INFO', '')
+        path_info = ''
+        while '/' in script:
+            if script in self.mounts:
+                app = self.mounts[script]
+                break
+            script, last_item = script.rsplit('/', 1)
+            path_info = '/%s%s' % (last_item, path_info)
+        else:
+            app = self.mounts.get(script, self.app)
+        original_script_name = environ.get('SCRIPT_NAME', '')
+        environ['SCRIPT_NAME'] = original_script_name + script
+        environ['PATH_INFO'] = path_info
+        return app(environ, start_response)
+
+    def attach_app(self, path, app):
+        self.mounts[path] = app
+
+    def detach_app(self, path):
+        app = self.mounts.get(path)
+        if app is not None:
+            del self.mounts[path]
 
 # the global web application
-app = bottle.app()
+dispatcher = ApplicationDispatcher(bottle.app())
 
 
 class WebfrontEngine(object):
@@ -52,7 +82,7 @@ class WebfrontEngine(object):
         logger.debug("Webfront engine is running...")
 
         self._http_listener = pywsgi.WSGIServer((self.listen_addr, self.listen_port)
-                                                , app)
+                                                , dispatcher)
 
         logger.debug("Web engine is listening on port: %d", self._http_listener.address[1])
 

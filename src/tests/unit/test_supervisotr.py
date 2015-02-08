@@ -77,7 +77,7 @@ class SupervisorTest(unittest.TestCase):
         self.assertTrue(mp.start.called)
         self.assertTrue(supervisor.is_server_running())
 
-        # emulate server process exits abnormally.
+        # emulate server process exits normally.
         mp.exitcode = 0
         self.assertFalse(supervisor.health_check())
         self.assertEqual(mp.start.call_count, 1)

@@ -21,7 +21,7 @@ class RuntimeConfigTests(unittest.TestCase):
         self.assertIsNotNone(self.config.get('DEFAULT', 'data_dir'))
         self.assertIsNotNone(self.config.get('DEFAULT', 'logs_dir'))
 
-        self.assertEqual(self.config.getint('web', 'listen_port'), 5000)
+        self.assertEqual(self.config.getint('webfront', 'listen_port'), 5000)
 
     def test_save_and_load_config_file(self):
         handle, filepath = tempfile.mkstemp()

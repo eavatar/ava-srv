@@ -5,7 +5,7 @@ from setuptools import setup, find_packages
 setup(
     name="eavatar.ava",
     version="0.1.0",
-    description="EAvatar Ava - A simple agent server based on Python runtime.",
+    description="EAvatar Ava - A versatile agent for publishing web resources.",
     package_dir={'': 'src'},
     packages=find_packages(exclude=['tests']),
     include_package_data=True,
@@ -20,11 +20,6 @@ setup(
         ],
         'gui_scripts': [
             'avaw = avaw:main',
-        ],
-        'eavatar.engines': [
-            '10:data_engine = ava.engine.data:DataEngine',
-            '30:web_engine = ava.engine.web:WebEngine',
-            '50:ext_engine = ava.engine.extension:ExtensionEngine',
         ],
     },
 

@@ -10,10 +10,9 @@ import logging
 
 import importlib
 
-import pkg_resources
-
 from ava import context
 from ava.defines import INSTALLED_ENGINES
+from ava.signals import AGENT_STARTED, AGENT_STOPPING
 
 logger = logging.getLogger(__name__)
 
@@ -77,7 +76,11 @@ class Agent(object):
         for it in self._engines:
             it.start(self._context)
 
+        self._context.send(signal=AGENT_STARTED, sender=self)
+
     def _stop_engines(self):
+        self._context.send(signal=AGENT_STOPPING, sender=self)
+
         for it in reversed(self._engines):
             it.stop(self._context)
 

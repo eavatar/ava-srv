@@ -2,14 +2,7 @@
 from __future__ import absolute_import, division, print_function, unicode_literals
 
 import os
-import sys
-import glob
 import logging
-import gevent
-from gevent import pywsgi
-import bottle
-
-from ava.runtime import config
 
 logger = logging.getLogger(__name__)
 
@@ -25,18 +18,18 @@ class WebDavEngine(object):
     """
     def __init__(self):
         logger.debug("Initializing webdav engine...")
-        self._http_listener = None
-        self.listen_port = 5000
+        self.user_folder_path = os.path.join(environ.home_dir(), 'user')
 
     def start(self, ctx=None):
         logger.debug("Starting webdav engine...")
 
-        provider = FilesystemProvider(environ.home_dir())
+        agent_folder = FilesystemProvider(environ.home_dir())
+        user_folder = FilesystemProvider(self.user_folder_path)
 
         conf = DEFAULT_CONFIG.copy()
         conf.update({
             b"mount_path": b'/dav',
-            b"provider_mapping": {b"/": provider},
+            b"provider_mapping": {b"/": user_folder, b'/agent': agent_folder},
             b"port": 5000,
             b"user_mapping": {},
             b"verbose": 1,

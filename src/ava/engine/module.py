@@ -76,7 +76,7 @@ class ModuleEngine(object):
 
                 ctx.send(signal=MODULE_LOADED, sender=self)
             except ImportError:
-                logger.error("Failed to import module: %s", name)
+                logger.error("Failed to import module: %s", name, exc_info=True)
 
     def start(self, ctx):
         logger.debug("Starting module engine...")

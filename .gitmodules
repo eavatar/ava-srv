@@ -1,3 +1,0 @@
-[submodule "pack/pyinstdev"]
-	path = pack/pyinstdev
-	url = git@github.com:pyinstaller/pyinstaller.git

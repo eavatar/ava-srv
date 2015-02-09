@@ -9,11 +9,11 @@ import shutil
 HOME_DIR_ENV = 'AVA_HOME'
 PROFILE_ENV = 'AVA_PROFILE'
 
-HOME_DIR_NAME = 'home'
-PKGS_DIR_NAME = 'pkgs'
-LOGS_DIR_NAME = 'logs'
-DATA_DIR_NAME = 'data'
-CONF_DIR_NAME = 'conf'
+HOME_DIR_NAME = b'home'
+PKGS_DIR_NAME = b'pkgs'
+LOGS_DIR_NAME = b'logs'
+DATA_DIR_NAME = b'data'
+CONF_DIR_NAME = b'conf'
 
 
 logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(levelname)s - %(name)s - %(message)s',)
@@ -32,8 +32,7 @@ class Environment(object):
 
         self.base_dir = base_path()
 
-        # Determines the location of the home directory which contains per-user files.
-        # Default is the 'eavatar' sub-directory of current user's home.
+        # Determines the location of the home directory.
 
         self.home_dir = os.path.join(self.base_dir, HOME_DIR_NAME)
 
@@ -48,38 +47,6 @@ class Environment(object):
         # Flag indicating if the runtime is launched by a shell.
         self.has_shell = False
         self.shell_port = 0
-
-    def setup_home_skel(self, profile):
-        """
-        Constructs the skeleton of directories if it not there already.
-        :return:
-        """
-
-        if os.path.exists(self.home_dir):
-            if not os.path.isdir(self.home_dir):
-                _logger.error("Home directory exists but seems not valid.")
-                raise SystemExit()
-        else:
-            os.makedirs(self.home_dir)
-
-        # if conf directory exists, assume the structure is OK.
-        if os.path.exists(self.conf_dir):
-            return
-
-        src_dir = os.path.join(self.base_dir, 'profiles', profile)
-        # copy files from base_dir to home_dir
-        #pat = shutil.ignore_patterns('__init__.*')
-        subdirs = os.listdir(src_dir)
-        #ignored_names = pat(src_dir, subdirs)
-        for d in subdirs:
-            #if d in ignored_names:
-            #    continue
-            src_path = os.path.join(src_dir, d)
-            dst_path = os.path.join(self.home_dir, d)
-            if os.path.isdir(src_path):
-                shutil.copytree(src_path, dst_path)
-            else:
-                shutil.copy2(src_path, dst_path)
 
 
 

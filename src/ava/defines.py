@@ -26,6 +26,7 @@ AGENT_INFO = {
 INSTALLED_ENGINES = [
     "ava.engine.data:DataEngine",
     "ava.engine.webfront:WebfrontEngine",
+    "ava.engine.webdav:WebDavEngine",
     "ava.engine.extension:ExtensionEngine",
     "ava.engine.module:ModuleEngine",
 ]

@@ -12,7 +12,7 @@ def create(platform=sys.platform):
     :return:
     """
     if platform.startswith("win32"):
-        from ava.shell.wx import Shell
+        from ava.shell.win32 import Shell
     elif platform.startswith("darwin"):
         from ava.shell.osx import Shell
     elif platform.startswith("linux"):

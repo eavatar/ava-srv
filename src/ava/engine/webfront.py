@@ -6,9 +6,9 @@ import sys
 import glob
 import logging
 import gevent
-from gevent import pywsgi
 import bottle
-
+from gevent import pywsgi
+from wsgidav.version import __version__
 from ava.runtime import config
 
 logger = logging.getLogger(__name__)
@@ -23,19 +23,19 @@ class ApplicationDispatcher(object):
         self.mounts = mounts or {}
 
     def __call__(self, environ, start_response):
-        script = environ.get('PATH_INFO', '')
+        script = environ.get(b'PATH_INFO', b'')
         path_info = ''
-        while '/' in script:
+        while b'/' in script:
             if script in self.mounts:
                 app = self.mounts[script]
                 break
-            script, last_item = script.rsplit('/', 1)
-            path_info = '/%s%s' % (last_item, path_info)
+            script, last_item = script.rsplit(b'/', 1)
+            path_info = b'/%s%s' % (last_item, path_info)
         else:
             app = self.mounts.get(script, self.app)
-        original_script_name = environ.get('SCRIPT_NAME', '')
-        environ['SCRIPT_NAME'] = original_script_name + script
-        environ['PATH_INFO'] = path_info
+        original_script_name = environ.get(b'SCRIPT_NAME', b'')
+        environ[b'SCRIPT_NAME'] = original_script_name + script
+        environ[b'PATH_INFO'] = path_info
         return app(environ, start_response)
 
     def attach_app(self, path, app):
@@ -55,14 +55,14 @@ class WebfrontEngine(object):
     The client-facing web interface.
     """
     def __init__(self):
-        logger.debug("Initializing web engine...")
+        logger.debug("Initializing webfront engine...")
         self._http_listener = None
         self.listen_port = 5000
         self.listen_addr = '127.0.0.1'
         self.local_base_url = "http://127.0.0.1:%d/" % (self.listen_port,)
 
     def start(self, ctx=None):
-        logger.debug("Starting web engine...")
+        logger.debug("Starting webfront engine...")
 
         self.listen_port = config.agent().getint('webfront', 'listen_port')
         self.listen_addr = config.agent().get('webfront', 'listen_addr')
@@ -83,7 +83,8 @@ class WebfrontEngine(object):
 
         self._http_listener = pywsgi.WSGIServer((self.listen_addr, self.listen_port)
                                                 , dispatcher)
-
-        logger.debug("Web engine is listening on port: %d", self._http_listener.address[1])
+        self._http_listener.set_environ({b"SERVER_SOFTWARE": b"WsgiDAV/{} ".format(__version__) +
+                                           self._http_listener.base_env["SERVER_SOFTWARE"]})
+        logger.debug("Webfront engine is listening on port: %d", self._http_listener.address[1])
 
         self._http_listener.serve_forever()

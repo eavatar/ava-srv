@@ -2,11 +2,14 @@
 from __future__ import absolute_import, division, print_function, unicode_literals
 
 import time
+import logging
 
 from gi.repository import Gtk
 from gi.repository import AppIndicator3 as appindicator
 from ava.shell.base import ShellBase
 from ava.shell import resource_path
+
+logger = logging.getLogger(__name__)
 
 
 class StatusIcon(object):
@@ -29,18 +32,31 @@ class StatusIcon(object):
     def menu_setup(self):
         self.menu = Gtk.Menu()
 
-        self.open_item = Gtk.MenuItem.new_with_label(u"Open Main View...")
+        self.open_item = Gtk.MenuItem.new_with_label(u"Open...")
         self.open_item.connect("activate", self.on_open_frame)
         self.open_item.show()
-        self.quit_item = Gtk.MenuItem.new_with_label(u"Exit Ava")
+
+        self.restart_item = Gtk.MenuItem.new_with_label(u"Restart")
+        self.restart_item.connect("activate", self.on_restart)
+        self.restart_item.show()
+
+        self.quit_item = Gtk.MenuItem.new_with_label(u"Exit")
         self.quit_item.connect("activate", self.quit)
         self.quit_item.show()
+
         self.menu.append(self.open_item)
+        self.menu.append(self.restart_item)
         self.menu.append(Gtk.SeparatorMenuItem.new())
         self.menu.append(self.quit_item)
 
     def on_open_frame(self, sender):
         self.shell.open_main_ui()
+
+    def on_restart(self, sender):
+        logger.debug("Restarting agent...")
+        self.shell.stop_server()
+
+        self.shell.start_server()
 
     def quit(self, widget):
         self.ind.set_status(appindicator.IndicatorStatus.PASSIVE)

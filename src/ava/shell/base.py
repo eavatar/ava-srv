@@ -39,7 +39,6 @@ class Supervisor(object):
 
     def stop_server(self):
         if self.server_process is not None:
-
             self.server_process.terminate()
             self.server_process.join()
 

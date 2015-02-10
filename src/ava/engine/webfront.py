@@ -12,6 +12,8 @@ from ava.runtime import environ
 
 logger = logging.getLogger(__name__)
 
+_CONF_SECTION = 'webfront'
+
 
 class ApplicationDispatcher(object):
     """Allows one to mount middlewares or applications in a WSGI application.
@@ -56,41 +58,61 @@ class WebfrontEngine(object):
     def __init__(self):
         logger.debug("Initializing webfront engine...")
         self._http_listener = None
+        self._https_listener = None
         self.listen_port = 5000
         self.listen_addr = '127.0.0.1'
+        self.secure_listen_port = 0  # o means not binding
         self.local_base_url = "http://127.0.0.1:%d/" % (self.listen_port,)
 
     def start(self, ctx=None):
         logger.debug("Starting webfront engine...")
 
-        self.listen_port = config.agent().getint('webfront', 'listen_port')
-        self.listen_addr = config.agent().get('webfront', 'listen_addr')
+        self.listen_port = config.agent().getint(_CONF_SECTION, 'listen_port')
+        self.listen_addr = config.agent().get(_CONF_SECTION, 'listen_addr')
+        self.secure_listen_port = config.agent().getint(_CONF_SECTION, 'secure_listen_port')
         self.local_base_url = "http://127.0.0.1:%d/" % (self.listen_port,)
 
         logger.debug("Local base URL:%s", self.local_base_url)
 
+        if self.listen_port != 0:
+            ctx.add_child_greenlet(gevent.spawn(self._run_http))
 
-        ctx.add_child_greenlet(gevent.spawn(self._run))
+        if self.secure_listen_port != 0:
+            ctx.add_child_greenlet(gevent.spawn(self._run_https))
+
 
         logger.debug("Webfront engine started.")
 
     def stop(self, ctx=None):
         logger.debug("Webfront engine stopped.")
 
-    def _run(self):
-        logger.debug("Webfront engine is running...")
+    def _run_https(self):
+        logger.debug("Webfront engine(HTTPS) is running...")
 
         conf_dir = environ.conf_dir()
         keyfile = os.path.join(conf_dir, 'ava.key')
         certfile = os.path.join(conf_dir, 'ava.crt')
 
-        self._http_listener = pywsgi.WSGIServer((self.listen_addr, self.listen_port),
+        self._https_listener = pywsgi.WSGIServer((self.listen_addr, self.secure_listen_port),
                                                 dispatcher,
                                                 keyfile=keyfile,
                                                 certfile=certfile)
 
+        self._https_listener.set_environ({b"SERVER_SOFTWARE": b"WsgiDAV/{} ".format(__version__) +
+                                           self._https_listener.base_env["SERVER_SOFTWARE"]})
+        logger.debug("Webfront engine(HTTPS) is listening on port: %d", self._https_listener.address[1])
+
+        self._https_listener.serve_forever()
+
+    def _run_http(self):
+        logger.debug("Webfront engine(HTTP) is running...")
+
+
+        self._http_listener = pywsgi.WSGIServer((self.listen_addr, self.listen_port),
+                                                dispatcher)
+
         self._http_listener.set_environ({b"SERVER_SOFTWARE": b"WsgiDAV/{} ".format(__version__) +
                                            self._http_listener.base_env["SERVER_SOFTWARE"]})
-        logger.debug("Webfront engine is listening on port: %d", self._http_listener.address[1])
+        logger.debug("Webfront engine(HTTP) is listening on port: %d", self._http_listener.address[1])
 
         self._http_listener.serve_forever()

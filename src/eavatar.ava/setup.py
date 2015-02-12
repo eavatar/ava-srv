@@ -6,7 +6,7 @@ setup(
     name="eavatar.ava",
     version="0.1.0",
     description="EAvatar Ava - A versatile agent for publishing web resources.",
-    package_dir={'': 'src'},
+    # package_dir={'': ''},
     packages=find_packages(exclude=['tests']),
     include_package_data=True,
 

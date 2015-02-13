@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 """
 Data engine implementation based on lighting memory database (http://symas.com/mdb/).
+The Lmdb is initialized, the access needs to use its binding API, though.
+Extension packages may provide higher-level APIs based on this.
 """
 from __future__ import absolute_import, division, print_function, unicode_literals
 
@@ -35,7 +37,6 @@ class DataEngine(DataEngineBase):
         super(DataEngine, self).__init__()
         self.datapath = None
         self.database = None
-        self.stores = {}
 
     def start(self, ctx=None):
         logger.debug("Starting data engine...")

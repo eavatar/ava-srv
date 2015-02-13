@@ -17,7 +17,7 @@ def start_server_process():
     Starts the server in the forked process.
     :return: None
     """
-    from ava.agent import start_agent
+    from ava.core.agent import start_agent
     start_agent()
 
 

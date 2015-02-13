@@ -24,18 +24,17 @@ AGENT_INFO = {
 # activated engines
 
 INSTALLED_ENGINES = [
-    "ava.engine.data:DataEngine",
-    "ava.engine.webfront:WebfrontEngine",
-    "ava.engine.webdav:WebDavEngine",
-    "ava.engine.extension:ExtensionEngine",
-    "ava.engine.module:ModuleEngine",
+    "ava.core.data:DataEngine",
+    "ava.core.webfront:WebfrontEngine",
+    "ava.core.extension:ExtensionEngine",
+    "ava.core.module:ModuleEngine",
 ]
 
 
 ##### Environment variable ####
 AVA_HOME = 'AVA_HOME'  # where the working directory.
 AVA_SECRET_KEY = 'AVA_SECRET_KEY'  # secret key for this agent.
-AVA_OWNER_KEY = 'AVA_OWNER_KEY'  # the owner's public key.
+AVA_OWNER_XID = 'AVA_OWNER_XID'  # the owner's public key.
 
 
 # tries to import definitions from the global settings.

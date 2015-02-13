@@ -9,7 +9,7 @@ from ava.util import resource_path
 
 from bottle import route, get, post, delete, put, request, response
 from bottle import static_file as _static_file
-from ava.engine.webfront import dispatcher
+from ava.core.webfront import dispatcher
 
 static_folder = os.path.join(resource_path('home'), 'static')
 

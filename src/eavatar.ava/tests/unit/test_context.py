@@ -3,7 +3,7 @@ from __future__ import print_function, division, absolute_import
 
 import unittest
 
-from ava.context import AgentContext
+from ava.context import Context
 
 
 class Receiver(object):
@@ -17,7 +17,7 @@ class Receiver(object):
 class CoreContextTest(unittest.TestCase):
 
     def setUp(self):
-        self.context = AgentContext(None)
+        self.context = Context(None)
 
     def test_send_signal(self):
         SIGNAL = 'my-first-signal'

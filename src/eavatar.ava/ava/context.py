@@ -4,7 +4,7 @@ from __future__ import absolute_import, division, print_function, unicode_litera
 from pydispatch import dispatcher
 
 
-class AgentContext(object):
+class Context(object):
     """
     The top context for all other entities.
     """
@@ -90,6 +90,6 @@ def instance(agent=None):
     """
     global _context
     if _context is None:
-        _context = AgentContext(agent)
+        _context = Context(agent)
 
     return _context

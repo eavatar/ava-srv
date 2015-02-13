@@ -1,9 +1,15 @@
 # -*- coding: utf-8 -*-
+"""
+Extension engine is responsible for adding packages(in egg format) to the path,
+and then starting or stopping extensions.
+
+Some packages provides no extension but acts as libraries for other packages.
+"""
 from __future__ import absolute_import, division, print_function, unicode_literals
 
 import logging
 import pkg_resources
-
+from ava.runtime.package import PackageManager
 
 logger = logging.getLogger(__name__)
 
@@ -48,3 +54,24 @@ class ExtensionManager(object):
                 except Exception:
                     pass
                     #IGNORED.
+
+
+class ExtensionEngine(object):
+    """
+    Responsible for managing extension packages.
+    """
+    def __init__(self):
+        self._extension_mgr = ExtensionManager()
+        self._package_mgr = PackageManager()
+
+    def start(self, ctx):
+        logger.debug("Starting extension engine...")
+        self._package_mgr.find_packages()
+        self._extension_mgr.load_extensions()
+        self._extension_mgr.start_extensions(ctx)
+        logger.debug("Extension engine started.")
+
+    def stop(self, ctx):
+        logger.debug("Stopping extension engine...")
+        self._extension_mgr.stop_extensions(ctx)
+        logger.debug("Extension engine stopped.")

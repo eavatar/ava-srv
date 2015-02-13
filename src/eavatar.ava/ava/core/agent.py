@@ -6,6 +6,8 @@ from gevent import monkey
 monkey.patch_all()
 
 import sys
+import signal
+import time
 import logging
 
 import importlib
@@ -15,6 +17,8 @@ from ava.defines import INSTALLED_ENGINES
 from ava.signals import AGENT_STARTED, AGENT_STOPPING
 
 logger = logging.getLogger(__name__)
+
+__agent = None
 
 
 def _mygetfilesystemencoding():
@@ -33,6 +37,20 @@ def patch_sys_getfilesystemencoding():
     # sys.getfilesystemencoding() always returns None when frozen on Ubuntu systems.
     patched_func = _mygetfilesystemencoding()
     sys.getfilesystemencoding = patched_func
+
+
+def restart_later():
+    if __agent.running:
+        logger.warning("Agent not stopped successfully!")
+    sys.exit(1)
+
+
+def signal_handler(signum = None, frame = None):
+    logger.debug("Received HUP signal, requests the shell to restart.")
+    global __agent
+    if __agent:
+        __agent._stop_engines()
+    sys.exit(1)
 
 
 def load_class(full_class_string):
@@ -59,6 +77,7 @@ class Agent(object):
         self._greenlets = []
         self._context = context.instance(self)
         self._engines = []
+        signal.signal(signal.SIGHUP, signal_handler)
 
     def add_child_greenlet(self, child):
         self._greenlets.append(child)
@@ -113,8 +132,9 @@ class Agent(object):
 
 
 def start_agent():
-    agent = Agent()
-    agent.run()
+    global __agent
+    __agent = Agent()
+    __agent.run()
 
 
 if __name__ == '__main__':

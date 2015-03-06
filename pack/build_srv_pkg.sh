@@ -1,5 +1,5 @@
 #!/bin/sh
 echo $(pwd)
-pyinstaller pack/srv_pkg.spec --clean -y
+python pack/pyinstaller/pyinstaller.py pack/srv_pkg.spec --clean -y
 
 

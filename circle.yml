@@ -2,6 +2,11 @@ machine:
   services:
   - docker
 
+checkout:
+  post:
+  - git submodule sync
+  - git submodule update --init
+
 dependencies:
   override:
     - sudo mkdir -p /usr/local/lib
@@ -19,7 +24,7 @@ test:
   override:
     - bin/py.test -vvv src/eavatar.ava/tests/unit/
     - bin/py.test -vvv src/eavatar.ava/tests/integration/
-    - pyinstaller pack/srv_pkg.spec --clean -y
+    - ./pack/build_srv_pkg.sh
     - docker-compose up -d ; sleep 5
     - bin/py.test -vvv src/eavatar.ava/tests/functional/
 

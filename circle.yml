@@ -2,6 +2,11 @@ machine:
   python:
     version: 2.7.6
 
+checkout:
+  post:
+    - git submodule sync
+    - git submodule update --init
+
 dependencies:
   override:
     - sudo mkdir -p /usr/local/lib

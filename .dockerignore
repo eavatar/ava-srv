@@ -4,3 +4,5 @@ develop-eggs
 eggs
 pack
 parts
+*.log
+*.mdb

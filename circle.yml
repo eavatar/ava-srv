@@ -8,10 +8,10 @@ dependencies:
     - sudo cp src/libs/libsodium.so.13.1.0 /usr/local/lib/
     - sudo ln -s /usr/local/lib/libsodium.so.13.1.0 /usr/local/lib/libsodium.so.13
     - sudo ln -s /usr/local/lib/libsodium.so.13.1.0 /usr/local/lib/libsodium.so
-    - pip install -U pip
-    - pip install docker-compose
-    - easy_install -U setuptools
-    - pip install -r requirements/requirements_test.txt
+    - sudo pip install -U pip
+    - sudo pip install docker-compose
+    - sudo easy_install -U setuptools
+    - sudo pip install -r requirements/requirements_test.txt
     - python bootstrap.py
     - bin/buildout
 

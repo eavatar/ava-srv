@@ -8,7 +8,7 @@ import time
 import os
 from tempfile import NamedTemporaryFile
 
-from ava.agent import Agent
+from ava.core.agent import Agent
 
 
 class AgentTest(unittest.TestCase):

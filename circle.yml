@@ -27,6 +27,6 @@ deployment:
     commands:
       - pyinstaller pack/srv_pkg.spec --clean -y
       - docker build -t eavatar/ava:$CIRCLE_SHA1 .
-      - docker tag eavatar/hub:$CIRCLE_SHA1 eavatar/ava:latest
+      - docker tag eavatar/ava:$CIRCLE_SHA1 eavatar/ava:latest
       - docker login -e $DOCKER_EMAIL -u $DOCKER_USER -p $DOCKER_PASS
       - docker push eavatar/ava

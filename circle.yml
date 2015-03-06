@@ -20,7 +20,7 @@ test:
     - bin/py.test -vvv src/eavatar.ava/tests/unit/
     - bin/py.test -vvv src/eavatar.ava/tests/integration/
     - pyinstaller pack/srv_pkg.spec --clean -y
-    - docker-compose up -d
+    - docker-compose up -d ; sleep 5
     - bin/py.test -vvv src/eavatar.ava/tests/functional/
 
 deployment:

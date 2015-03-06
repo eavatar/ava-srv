@@ -1,4 +1,6 @@
 machine:
+  services:
+  - docker
   python:
     version: 2.7.6
 
@@ -26,3 +28,12 @@ test:
     - bin/py.test -vvv src/eavatar.ava/tests/integration/
     - bin/py.test -vvv src/eavatar.ava/tests/functional/
 
+deployment:
+  hub:
+    branch: master
+    commands:
+      - ./pack/build_srv_pkg.sh
+      - docker build -t eavatar/ava:$CIRCLE_SHA1 .
+      - docker tag eavatar/hub:$CIRCLE_SHA1 eavatar/ava:latest
+      - docker login -e $DOCKER_EMAIL -u $DOCKER_USER -p $DOCKER_PASS
+      - docker push eavatar/ava

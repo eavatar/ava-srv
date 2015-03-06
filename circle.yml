@@ -19,6 +19,7 @@ test:
   override:
     - bin/py.test -vvv src/eavatar.ava/tests/unit/
     - bin/py.test -vvv src/eavatar.ava/tests/integration/
+    - pyinstaller pack/srv_pkg.spec --clean -y
     - docker-compose up -d
     - bin/py.test -vvv src/eavatar.ava/tests/functional/
 
@@ -26,7 +27,6 @@ deployment:
   hub:
     branch: master
     commands:
-      - pyinstaller pack/srv_pkg.spec --clean -y
       - docker build -t eavatar/ava:$CIRCLE_SHA1 .
       - docker tag eavatar/ava:$CIRCLE_SHA1 eavatar/ava:latest
       - docker login -e $DOCKER_EMAIL -u $DOCKER_USER -p $DOCKER_PASS

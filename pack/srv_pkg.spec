@@ -1,10 +1,12 @@
 # -*- mode: python -*-
+# -*- coding: utf-8 -*-
 
-app_path = 'src'
+app_path = os.path.join('src', 'eavatar.ava')
 
 
 exe_name = 'avad'
 hiddenimports = []
+run_strip = True
 
 if sys.platform.startswith('win32'):
     exe_name = 'avad.exe'
@@ -39,8 +41,8 @@ exe = EXE(pyz,
           exclude_binaries=True,
           name=os.path.join('build', 'pyi.'+sys.platform, 'server', exe_name),
           debug=False,
-          strip=False,
-          upx=False,
+          strip=True,
+          upx=True,
           icon= os.path.join(app_path, 'home/static/images/eavatar.ico'),
           console=True )
 

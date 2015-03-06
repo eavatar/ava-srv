@@ -9,11 +9,11 @@ import shutil
 HOME_DIR_ENV = 'AVA_HOME'
 PROFILE_ENV = 'AVA_PROFILE'
 
-HOME_DIR_NAME = b'home'
-PKGS_DIR_NAME = b'pkgs'
-LOGS_DIR_NAME = b'logs'
-DATA_DIR_NAME = b'data'
-CONF_DIR_NAME = b'conf'
+HOME_DIR_NAME = u'home'
+PKGS_DIR_NAME = u'pkgs'
+LOGS_DIR_NAME = u'logs'
+DATA_DIR_NAME = u'data'
+CONF_DIR_NAME = u'conf'
 
 
 logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(levelname)s - %(name)s - %(message)s',)

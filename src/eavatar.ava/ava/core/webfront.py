@@ -6,7 +6,6 @@ import logging
 import gevent
 import bottle
 from gevent import pywsgi
-from wsgidav.version import __version__
 from ava.runtime import config
 from ava.runtime import environ
 
@@ -98,8 +97,6 @@ class WebfrontEngine(object):
                                                 keyfile=keyfile,
                                                 certfile=certfile)
 
-        self._https_listener.set_environ({b"SERVER_SOFTWARE": b"WsgiDAV/{} ".format(__version__) +
-                                           self._https_listener.base_env["SERVER_SOFTWARE"]})
         logger.debug("Webfront engine(HTTPS) is listening on port: %d", self._https_listener.address[1])
 
         self._https_listener.serve_forever()
@@ -111,8 +108,6 @@ class WebfrontEngine(object):
         self._http_listener = pywsgi.WSGIServer((self.listen_addr, self.listen_port),
                                                 dispatcher)
 
-        self._http_listener.set_environ({b"SERVER_SOFTWARE": b"WsgiDAV/{} ".format(__version__) +
-                                           self._http_listener.base_env["SERVER_SOFTWARE"]})
         logger.debug("Webfront engine(HTTP) is listening on port: %d", self._http_listener.address[1])
 
         self._http_listener.serve_forever()

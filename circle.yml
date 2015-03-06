@@ -9,8 +9,8 @@ dependencies:
     - sudo ln -s /usr/local/lib/libsodium.so.13.1.0 /usr/local/lib/libsodium.so.13
     - sudo ln -s /usr/local/lib/libsodium.so.13.1.0 /usr/local/lib/libsodium.so
     - sudo pip install -U pip
-    - sudo pip install docker-compose
     - sudo easy_install -U setuptools
+    - sudo pip install docker-compose
     - sudo pip install -r requirements/requirements_test.txt
     - python bootstrap.py
     - bin/buildout
@@ -19,6 +19,7 @@ test:
   override:
     - bin/py.test -vvv src/eavatar.ava/tests/unit/
     - bin/py.test -vvv src/eavatar.ava/tests/integration/
+    - docker-compose up -d
     - bin/py.test -vvv src/eavatar.ava/tests/functional/
 
 deployment:
